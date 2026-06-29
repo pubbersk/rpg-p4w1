@@ -1,8 +1,6 @@
 """
 
 МОДУЛЬ «MAIN.PY»
-Задача 3.3: Инициализация счетчиков игры
-Требования: Создать переменную игрового цикла is_running = True и счетчик пройденных комнат room_counter = 1.
 Задача 3.4: Контроллер главного игрового цикла
 Требования: Запустить цикл while is_running. Каждую итерацию цикла увеличивать room_counter на 1. Вызывать world.get_room_description() для описания новой локации.
 Задача 3.5: Диспетчер случайных событий
@@ -44,4 +42,9 @@ def main():
     room_counter = 1
     player_level = 1
 
-    
+
+    """3.4"""
+    while is_running:
+        world.print_status(player, room_counter)
+
+        print(f"Вы входите в новую локацию: {world.get_room_description()}")
