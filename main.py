@@ -1,8 +1,6 @@
 """
 
 МОДУЛЬ «MAIN.PY»
-Задача 3.4: Контроллер главного игрового цикла
-Требования: Запустить цикл while is_running. Каждую итерацию цикла увеличивать room_counter на 1. Вызывать world.get_room_description() для описания новой локации.
 Задача 3.5: Диспетчер случайных событий
 Требования: Внутри цикла вызывать world.get_random_event(). С помощью конструкции if/elif/else перенаправлять игровой процесс на функции учеников: combat.start_battle, world.open_chest, world.trigger_trap или посещение магазина.
 Задача 3.6: Логика усложнения и прокачки
@@ -48,3 +46,10 @@ def main():
         world.print_status(player, room_counter)
 
         print(f"Вы входите в новую локацию: {world.get_room_description()}")
+
+        """3.6"""
+        if room_counter > 1 and room_counter % 5 == 0:
+            player = world.level_up()
+            player_level += 1
+            input("Нажмите Enter, чтобы продолжить...")
+            
