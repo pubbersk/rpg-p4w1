@@ -3,8 +3,6 @@
 МОДУЛЬ «MAIN.PY»
 Задача 3.5: Диспетчер случайных событий
 Требования: Внутри цикла вызывать world.get_random_event(). С помощью конструкции if/elif/else перенаправлять игровой процесс на функции учеников: combat.start_battle, world.open_chest, world.trigger_trap или посещение магазина.
-Задача 3.7: Сражение с Финальным Боссом
-Требования: Когда room_counter == 20, прервать обычный цикл. Вручную создать словарь монстра «Дракон» с повышенными характеристиками и принудительно запустить combat.start_battle().
 Задача 3.8: Обработка финала игры (Win/Game Over)
 Требования: Если игрок побеждает Дракона на 20-м шаге — вывести сообщение о прохождении игры. Если на любом из этапов combat.check_battle_result возвращает False — остановить цикл, вывести итоговую статистику (сколько золота собрано, в какой комнате погиб).
 
@@ -27,9 +25,7 @@ def main():
     if not player_name:
         player_name = "Безымянный Герой"
     
-    # доделать текст todo
-
-
+    print(f"\nПриветствуем тебя, рыцарь {player_name}! Твой путь начинается.")
     player = combat.create_player()
 
 
@@ -71,4 +67,61 @@ def main():
                 print(f"Итоговая статистика: собрано золота: {player['gold']}, пройдено комнат: {room_counter}.")
             is_running = False
             break
+
+        """3.5"""
+        event = world.get_random_event()
+        
+        if event == 1:
+            # Событие: Монстр
+            monster = combat.make_monster(player_level)
+            combat.start_battle(player, monster)
+            
+            # Задача 3.8: Обработка Game Over в случае поражения
+            if not combat.check_battle_result(player, monster):
+                print(f"\nИтоговая статистика: собрано золота: {player['gold']}, пройдено комнат: {room_counter}.")
+                is_running = False
+                break
+                
+        elif event == 2:
+            # Событие: Торговец
+            print("\n🧙 Вы встретили бродячего торговца!")
+            shop_items = world.get_shop_items()
+            
+            print("Доступные товары:")
+            for item, price in shop_items.items():
+                print(f"- {item}: {price} золота")
+                
+            buy_choice = input("Что хотите купить? (Зелье / Заточка / Ничего): ").strip().lower()
+            if buy_choice in ["зелье", "potion"]:
+                world.buy_item(player, "Зелье", shop_items["Зелье"])
+            elif buy_choice in ["заточка", "заточка оружия"]:
+                world.buy_item(player, "Заточка оружия", shop_items["Заточка оружия"])
+            else:
+                print("Вы решили ничего не покупать.")
+                
+        elif event == 3:
+            # Событие: Сундук
+            player = world.open_chest(player)
+            
+        elif event == 4:
+            # Событие: Пустая комната / Ловушка
+            player = world.trigger_trap(player)
+            # Если игрок погиб на ловушке
+            if player['hp'] <= 0:
+                print("\n💀 Вы погибли от ран, полученных в ловушке...")
+                print(f"Итоговая статистика: собрано золота: {player['gold']}, пройдено комнат: {room_counter}.")
+                is_running = False
+                break
+
+        # Переход к следующей комнате
+        room_counter += 1
+        if is_running:
+            input("\nНажмите Enter, чтобы сделать следующий шаг...")
+
+    print("\nСпасибо за игру!")
+
+
+if __name__ == "__main__":
+    main()
+
 
